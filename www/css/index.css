@@ -7,6 +7,16 @@
     transition: height .3s linear;
 }
 
+.page-list li { position: relative; }
+.page-list li > button.edit-task { 
+    position: absolute;
+    width: 70px;
+    height: 40px;
+    z-index: 1;
+    top: -6px;
+    right: 40px;
+ }
+
 body {
     -webkit-touch-callout: none;                /* prevent callout to copy image, etc when tap to hold */
     -webkit-text-size-adjust: none;             /* prevent webkit from resizing text to fit */
