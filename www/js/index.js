@@ -25,7 +25,7 @@ function setEvents() {
         if ($(".remove-page").hasClass("remove-active")) {
             $(".page-list li").append('<button class="remove-page-button"><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash" width="20" height="20" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 7l16 0" /><path d="M10 11l0 6" /><path d="M14 11l0 6" /><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" /><path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" /></svg></button>');
             $(".remove-page-button").off().on('click', function() {
-                if (confirm("Vols esborrar aquesta tasca?")) { /*$(this).parent().remove();*/ editData($(this).parent().attr("id")); }
+                if (confirm("Vols esborrar aquesta tasca?")) { removeData($(this).parent().attr("id")) }
             })
         } else if (!$(".remove-page").hasClass("remove-active")) {
             $(".remove-page-button").each(function(i,e) {
@@ -68,7 +68,7 @@ function setEvents() {
             editTaskButt.siblings().css("display", "flex");
             
             // editTaskButt.siblings("a").text(newText);
-            editData(task.attr("id"));
+            editData(task.attr("id"), newText);
         });
     });
 }
@@ -86,6 +86,8 @@ function showData() {
         for (const d of data.entries()) $('.page-list').append(`<li id="${d[0]}"><a href="">${d[1]}</a><button class="edit-task">Edit!</button></li>`);
 
         $('.page-list').listview("refresh");
+    
+        setEvents()
     }
 }
 
@@ -102,16 +104,10 @@ function addData(newtask) {
 function removeData(taskid) {
     let data = JSON.parse(localStorage.getItem("data")) ?? [];
 
-    let newData = [];
-    let index = 0;
-    // data.splice(taskid, 1);
-    for (const task of data) {
-        if (index !== taskid) newData.push(task)
-        index++
-    }
+    data.splice(taskid, 1);
     
     localStorage.removeItem("data");
-    localStorage.setItem("data", JSON.stringify(newData));
+    localStorage.setItem("data", JSON.stringify(data));
 
     showData();
 }
@@ -119,7 +115,8 @@ function removeData(taskid) {
 function editData(taskid, newText) {
     let data = JSON.parse(localStorage.getItem("data")) ?? [];
 
-    data[taskid] = newText;
+    if (data[taskid] != null || data[taskid] != "") data[taskid] = newText;
+
     localStorage.removeItem("data");
     localStorage.setItem("data", JSON.stringify(data));
 
